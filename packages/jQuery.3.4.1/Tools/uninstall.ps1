@@ -10,7 +10,7 @@ if (Test-Path $projectIntelliSenseFilePath) {
     if ((Get-Checksum $projectIntelliSenseFilePath) -eq (Get-Checksum $origIntelliSenseFilePath)) {
         # The intellisense file in the project matches the file in the tools folder, delete it
         
-        if ($scriptsFolderProjectItem -eq $null) {
+        if ($null -eq $scriptsFolderProjectItem) {
             # No Scripts folder
             exit
         }
