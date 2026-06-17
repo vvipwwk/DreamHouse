@@ -1,0 +1,44 @@
+## Visual Studio workspace
+.vs/
+.github/upgrades/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+Bin/**/*.pdb
+Bin/**/*.xml
+Bin/**/*.refresh
+obj/
+
+# NuGet packages
+packages/
+*.nupkg
+nuget.exe
+
+# Precompiled output
+PrecompiledWeb/
+
+# Local archives and backups
+*.zip
+*.bak
+*.tmp
+*.log
+
+# Source maps and unused packaged asset variants
+*.map
+Content/*.rtl.css
+Content/*.rtl.min.css
+Scripts/*.esm.js
+Scripts/*.esm.min.js
+Scripts/*.slim.js
+Scripts/*.slim.min.js
+
+# Rider/IDE files
+.idea/
+
+# Node
+node_modules/
