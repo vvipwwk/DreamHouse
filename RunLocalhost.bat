@@ -1,5 +1,5 @@
 @echo off
-set PORT=8080
+set PORT=58457
 set "SITE_PATH=%~dp0"
 set "IIS_EXPRESS=C:\Program Files\IIS Express\iisexpress.exe"
 set "IIS_EXPRESS_X86=C:\Program Files (x86)\IIS Express\iisexpress.exe"
@@ -36,4 +36,4 @@ echo =========================================================
 echo.
 
 start http://localhost:%PORT%
-"%EXE_TO_RUN%" /path:"%SITE_PATH:~0,-1%" /port:%PORT%
+"%EXE_TO_RUN%" /path:"%SITE_PATH:~0,-1%" /port:%PORT% /clr:v4.0

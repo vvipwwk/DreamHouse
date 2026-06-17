@@ -17,7 +17,7 @@
                 <ItemTemplate>
                     <div class="col-md-4" style="margin-bottom: 30px;">
                         <div class="card property-card h-100" style="border:none; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); overflow:hidden; transition:transform .3s ease;">
-                            <div style="height:200px; background:url('<%# GetCityImage(Eval("city"), Eval("propertyNo")) %>') center/cover no-repeat;</div>
+                            <div style="height:200px; background:url('<%# GetCityImage(Eval("city"), Eval("propertyNo")) %>') center/cover no-repeat;"></div>
                             <div class="card-body" style="padding:20px; background:white;">
                                 <div style="display:flex; justify-content:space-between; align-items:baseline;">
                                     <h4 class="card-title" style="margin-top:0; font-weight:bold; color:#333;"><%# Eval("type") %> in <%# Eval("city") %></h4>

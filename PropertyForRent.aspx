@@ -6,6 +6,14 @@
             <div class="col-md-12">
                 <h2 class="mb-4" style="font-weight: 700; color: #2C3E50;">Available Properties</h2>
 
+                <% if (IsSeller()) { %>
+                <div style="margin-bottom: 20px;">
+                    <a href="AddPropertyForRent.aspx" class="btn" style="background:#e74c3c; color:white; border-radius:24px; padding:10px 22px; font-weight:700; text-decoration:none; display:inline-block;">
+                        Publish New Property
+                    </a>
+                </div>
+                <% } %>
+
                 <asp:Panel ID="pnlSearchBar" runat="server" Visible="false" CssClass="row" style="margin-bottom: 15px;">
                     <div style="background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 10px;">
                         <i class="glyphicon glyphicon-search" style="color:#aaa; font-size:1.3em;"></i>
@@ -46,10 +54,10 @@
                                 </div>
                             </div>
                             <div class="card-footer" style="padding: 15px 20px; background: #f8f9fa; border-top: 1px solid #eaeaea; display: flex; gap: 10px;">
-                                <asp:Button ID="btnBuy" runat="server" Text="Enquire / Buy" CssClass="btn" style="flex: 1; background-color: #27ae60; color: white; font-weight: 600; border-radius: 8px;" CommandName="Buy" CommandArgument='<%# Eval("propertyNo") %>' />
-                                <%-- Only Sellers can edit properties --%>
                                 <% if (IsSeller()) { %>
                                 <a href="EditPropertyForRent.aspx?propertyNo=<%# Eval("propertyNo") %>" class="btn" style="flex: 1; background-color: #3498db; color: white; font-weight: 600; border-radius: 8px; text-align: center; display: inline-block;">Edit Details</a>
+                                <% } else { %>
+                                <asp:Button ID="btnBuy" runat="server" Text="Enquire / Buy" CssClass="btn" style="flex: 1; background-color: #27ae60; color: white; font-weight: 600; border-radius: 8px;" CommandName="Buy" CommandArgument='<%# Eval("propertyNo") %>' />
                                 <% } %>
                             </div>
                         </div>

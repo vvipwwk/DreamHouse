@@ -15,8 +15,8 @@ if (Test-Path $iisExpress) {
     exit
 }
 
-$port = 8080
-$sitePath = (Get-Item .).FullName
+$port = 58457
+$sitePath = $PSScriptRoot
 
 Write-Host "Starting Dreamhouse Property Website on http://localhost:$port" -ForegroundColor Green
 Write-Host "Press Ctrl+C to stop the server." -ForegroundColor Yellow
@@ -25,4 +25,4 @@ Write-Host "Press Ctrl+C to stop the server." -ForegroundColor Yellow
 Start-Process "http://localhost:$port"
 
 # Run IIS Express
-& $exeToRun /path:"$sitePath" /port:$port
+& $exeToRun /path:"$sitePath" /port:$port /clr:v4.0
