@@ -63,6 +63,16 @@ CREATE TABLE IF NOT EXISTS [Purchases] (
     [PropertyNo] VARCHAR(10) NOT NULL,
     [UserId] NVARCHAR(128) NOT NULL,
     [PurchaseDate] DATETIME NOT NULL,
+    [BuyerName] NVARCHAR(256),
+    [BuyerEmail] NVARCHAR(256),
+    [ContactNo] NVARCHAR(50),
+    [BillingAddress] TEXT,
+    [MonthlyRent] DECIMAL(10,2),
+    [ServiceFee] DECIMAL(10,2),
+    [TaxAmount] DECIMAL(10,2),
+    [TotalAmount] DECIMAL(10,2),
+    [PaymentMethod] NVARCHAR(50),
+    [Status] NVARCHAR(50),
     FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]),
     FOREIGN KEY ([PropertyNo]) REFERENCES [PropertyForRent] ([propertyNo])
 );

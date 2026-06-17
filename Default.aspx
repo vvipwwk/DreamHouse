@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <style>
@@ -25,23 +25,28 @@
         .search-container {
             background: white;
             border-radius: 50px;
-            padding: 5px;
+            padding: 6px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             max-width: 800px;
             width: 100%;
             margin: 0 auto;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         .search-input {
             border: none;
-            padding: 15px 25px;
+            padding: 15px 20px;
             font-size: 1.2em;
             flex-grow: 1;
-            border-radius: 50px 0 0 50px;
+            flex-shrink: 1;
+            flex-basis: 0;
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
             outline: none;
             color: #333;
+            background: transparent;
         }
         .search-btn {
             background-color: #e74c3c;
@@ -53,7 +58,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
-            margin-left: 10px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         .search-btn:hover {
             background-color: #c0392b;
@@ -73,6 +80,35 @@
             font-size: 3em;
             color: #3498db;
             margin-bottom: 20px;
+        }
+        @media (max-width: 767px) {
+            .hero-section {
+                padding: 70px 18px;
+                border-radius: 14px;
+            }
+            .hero-title {
+                font-size: 2.6em;
+            }
+            .hero-subtitle {
+                font-size: 1.15em;
+            }
+            .search-container {
+                border-radius: 24px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                padding: 10px;
+            }
+            .search-input {
+                width: 100%;
+                font-size: 1em;
+                padding: 13px 16px;
+            }
+            .search-btn {
+                width: 100%;
+                margin-left: 0;
+                padding: 12px 20px;
+            }
         }
     </style>
 
