@@ -4,8 +4,8 @@ ASP.NET Web Forms property rental site for browsing, buying, editing, and publis
 
 ## Run Locally
 
-1. Open the folder in Visual Studio Community, or run `RunLocalhost.bat`.
-2. Visit `http://localhost:58457/`.
+1. Run `RunLocalhost.bat` or the executable file "DreamHouseLauncher.exe.
+2. It will launch the webpage `http://localhost:58457/` automatically.
 3. The SQLite database is stored at `App_Data/Dreamhouse.db`.
 
 ## Notes
