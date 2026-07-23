@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
-=======
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <style>
@@ -29,21 +25,13 @@
         .search-container {
             background: white;
             border-radius: 50px;
-<<<<<<< HEAD
             padding: 6px;
             display: flex;
             align-items: center;
-=======
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
             max-width: 800px;
             width: 100%;
             margin: 0 auto;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-<<<<<<< HEAD
             box-sizing: border-box;
         }
         .search-input {
@@ -59,17 +47,6 @@
             outline: none;
             color: #333;
             background: transparent;
-=======
-        }
-        .search-input {
-            border: none;
-            padding: 15px 25px;
-            font-size: 1.2em;
-            flex-grow: 1;
-            border-radius: 50px 0 0 50px;
-            outline: none;
-            color: #333;
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
         }
         .search-btn {
             background-color: #e74c3c;
@@ -81,13 +58,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
-<<<<<<< HEAD
             flex-grow: 0;
             flex-shrink: 0;
             white-space: nowrap;
-=======
-            margin-left: 10px;
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
         }
         .search-btn:hover {
             background-color: #c0392b;
@@ -108,7 +81,6 @@
             color: #3498db;
             margin-bottom: 20px;
         }
-<<<<<<< HEAD
         @media (max-width: 767px) {
             .hero-section {
                 padding: 70px 18px;
@@ -138,8 +110,6 @@
                 padding: 12px 20px;
             }
         }
-=======
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
     </style>
 
     <div class="hero-section">
@@ -192,8 +162,4 @@
             }
         }
     </script>
-<<<<<<< HEAD
 </asp:Content>
-=======
-</asp:Content>
->>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
