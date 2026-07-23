@@ -91,7 +91,26 @@ public partial class SearchResults : Page
             }
 
             string propertyNo = e.CommandArgument.ToString();
+<<<<<<< HEAD
             Response.Redirect("~/Checkout.aspx?propertyNo=" + Server.UrlEncode(propertyNo));
+=======
+            string userId = Microsoft.AspNet.Identity.IdentityExtensions.GetUserId(User.Identity);
+
+            string mainconn = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+            using (var con = new SQLiteConnection(mainconn))
+            {
+                string sqlquery = "INSERT INTO Purchases (PropertyNo, UserId, PurchaseDate) VALUES (@PropertyNo, @UserId, @PurchaseDate)";
+                using (var sqlconn = new SQLiteCommand(sqlquery, con))
+                {
+                    sqlconn.Parameters.AddWithValue("@PropertyNo", propertyNo);
+                    sqlconn.Parameters.AddWithValue("@UserId", userId);
+                    sqlconn.Parameters.AddWithValue("@PurchaseDate", DateTime.Now);
+
+                    con.Open();
+                    int rows = sqlconn.ExecuteNonQuery();
+                }
+            }
+>>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
         }
     }
 }

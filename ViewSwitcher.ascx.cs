@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Web;
 using System.Web.Routing;
@@ -34,4 +35,42 @@ public partial class ViewSwitcher : System.Web.UI.UserControl
         url += "?ReturnUrl=" + HttpUtility.UrlEncode(Request.RawUrl);
         SwitchUrl = url;
     }
+=======
+﻿using System;
+using System.Web;
+using System.Web.Routing;
+using Microsoft.AspNet.FriendlyUrls;
+using Microsoft.AspNet.FriendlyUrls.Resolvers;
+
+public partial class ViewSwitcher : System.Web.UI.UserControl
+{
+    protected string CurrentView { get; private set; }
+
+    protected string AlternateView { get; private set; }
+
+    protected string SwitchUrl { get; private set; }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // Determine current view
+        var isMobile = WebFormsFriendlyUrlResolver.IsMobileView(new HttpContextWrapper(Context));
+        CurrentView = isMobile ? "Mobile" : "Desktop";
+
+        // Determine alternate view
+        AlternateView = isMobile ? "Desktop" : "Mobile";
+
+        // Create switch URL from the route, e.g. ~/__FriendlyUrls_SwitchView/Mobile?ReturnUrl=/Page
+        var switchViewRouteName = "AspNet.FriendlyUrls.SwitchView";
+        var switchViewRoute = RouteTable.Routes[switchViewRouteName];
+        if (switchViewRoute == null)
+        {
+            // Friendly URLs is not enabled or the name of the switch view route is out of sync
+            this.Visible = false;
+            return;
+        }
+        var url = GetRouteUrl(switchViewRouteName, new { view = AlternateView, __FriendlyUrls_SwitchViews = true });
+        url += "?ReturnUrl=" + HttpUtility.UrlEncode(Request.RawUrl);
+        SwitchUrl = url;
+    }
+>>>>>>> 204766cb2f729d0403a4ec624e93ac6c5522c789
 }
