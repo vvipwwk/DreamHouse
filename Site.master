@@ -105,8 +105,8 @@
             background: transparent !important;
         }
         .btn-nav-login:hover {
-            background: #e74c3c !important;
-            color: white !important;
+            background: #d4887f !important;
+            border-color: #d4887f !important;
         }
         .btn-nav-register {
             margin: 0 5px;
@@ -121,8 +121,8 @@
             transition: all 0.2s !important;
         }
         .btn-nav-register:hover {
-            background: #c0392b !important;
-            border-color: #c0392b !important;
+            background: #530d05 !important;
+            border-color: #530d05 !important;
         }
         .nav-username {
             color: #2c3e50 !important;

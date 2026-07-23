@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <style>
         .about-hero {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #E74C3C 100%);
             color: white;
             text-align: center;
             padding: 70px 20px 60px;
@@ -142,7 +142,7 @@
     <%-- Hero --%>
     <div class="about-hero">
         <h1>About Dreamhouse</h1>
-        <p>Your trusted partner in finding the perfect property — connecting buyers, renters, and sellers across Singapore since 2018.</p>
+        <p>Your trusted partner in finding the perfect property <br> Connecting buyers, renters, and sellers across the world since 2018.</p>
     </div>
 
     <div class="about-wrap">
@@ -151,10 +151,10 @@
         <div class="mission-section">
             <div class="mission-text">
                 <h2>Our Mission</h2>
-                <p>At Dreamhouse, we believe everyone deserves a place to call home. Our platform makes the rental and property search process simple, transparent, and stress-free — whether you're a first-time renter or an experienced investor.</p>
-                <p>We connect thousands of property seekers with verified listings across Singapore, backed by a dedicated team of professionals who care about getting you the right match.</p>
+                <p>At Dreamhouse, we believe everyone deserves a place to call home. Our platform makes the rental and property search process simple, transparent, and stress-free, whether you're a first-time renter or an experienced investor.</p>
+                <p>We connect thousands of property seekers with verified listings across the world, backed by a dedicated team of professionals who care about getting you the right match.</p>
             </div>
-            <div class="mission-img">🏡</div>
+            <div class="mission-img"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" width="465" height="260"></div>
         </div>
 
         <%-- Stats --%>
@@ -188,8 +188,8 @@
                 </div>
                 <div class="why-card">
                     <div class="icon">&#x1f50d;</div>
-                    <h4>Smart Search</h4>
-                    <p>Filter by city, price, type, and number of rooms to quickly narrow down listings that match exactly what you need.</p>
+                    <h4>Wide Selection</h4>
+                    <p>Explore hundreds of properties across top cities to find your perfect match. Filter by city, price, type, and number of rooms to quickly narrow down listings that match exactly what you need.</p>
                 </div>
                 <div class="why-card">
                     <div class="icon">&#x1f512;</div>
@@ -199,7 +199,7 @@
                 <div class="why-card">
                     <div class="icon">&#x1f4ac;</div>
                     <h4>Direct Enquiries</h4>
-                    <p>Contact property owners directly through our built-in enquiry system — no middlemen, no hidden fees.</p>
+                    <p>Contact property owners directly through our built-in enquiry system - no middlemen, no hidden fees.</p>
                 </div>
                 <div class="why-card">
                     <div class="icon">&#x1f4f1;</div>
@@ -209,7 +209,7 @@
                 <div class="why-card">
                     <div class="icon">&#x1f3e2;</div>
                     <h4>Branch Network</h4>
-                    <p>Our branch offices across Singapore provide in-person support for buyers and sellers who prefer face-to-face service.</p>
+                    <p>Our branch offices across the world provide in-person support for buyers and sellers who prefer face-to-face service.</p>
                 </div>
             </div>
         </div>
@@ -231,10 +231,10 @@
                     <p>Sarah oversees our branch network and ensures every listing meets Dreamhouse's quality and verification standards.</p>
                 </div>
                 <div class="team-card">
-                    <div class="team-avatar" style="background: linear-gradient(135deg, #27ae60, #229954);">RA</div>
-                    <h4>Ravi Arun</h4>
+                    <div class="team-avatar" style="background: linear-gradient(135deg, #27ae60, #229954);">DW</div>
+                    <h4>David Wong</h4>
                     <div class="role">Lead Developer</div>
-                    <p>Ravi built and maintains the Dreamhouse platform, ensuring it's fast, secure, and easy to use for all our users.</p>
+                    <p>David built and maintains the Dreamhouse platform, ensuring it's fast, secure, and easy to use for all our users.</p>
                 </div>
             </div>
         </div>
@@ -242,7 +242,7 @@
         <%-- CTA --%>
         <div class="cta-section">
             <h2>Ready to Find Your Dream Property?</h2>
-            <p>Browse thousands of verified listings across Singapore today — it only takes a minute to get started.</p>
+            <p>Browse thousands of verified listings across the world today - it only takes a minute to get started.</p>
             <a href="/PropertyForRent.aspx" class="cta-btn">Browse Properties</a>
         </div>
 
