@@ -14,20 +14,21 @@ public partial class EditPropertyForRent : System.Web.UI.Page
     string Mainconn = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
-    {      
-        // Guard: must be logged in
+    {
         if (!User.Identity.IsAuthenticated)
         {
             Response.Redirect("~/Account/Login.aspx?ReturnUrl=" + Server.UrlEncode(Request.Url.PathAndQuery));
             return;
         }
 
-        // Guard: must be a Seller
         if (!User.IsInRole("Seller"))
         {
             Response.Redirect("~/PropertyForRent.aspx");
             return;
         }
+
+        // Ensure isHidden column exists — safe to run every time
+        EnsureIsHiddenColumn();
 
         if (!Page.IsPostBack)
         {
@@ -40,7 +41,7 @@ public partial class EditPropertyForRent : System.Web.UI.Page
 
             using (SQLiteConnection con = new SQLiteConnection(Mainconn))
             {
-                string sqlquery = "SELECT * FROM PropertyForRent WHERE propertyNo=@propertyNo";
+                string sqlquery = "SELECT propertyNo, street, city, postcode, type, rooms, rent, ownerNo, staffNo, branchNo, isHidden FROM PropertyForRent WHERE propertyNo=@propertyNo";
                 using (SQLiteCommand sqlcomm = new SQLiteCommand(sqlquery, con))
                 {
                     sqlcomm.Parameters.AddWithValue("@propertyNo", propertyID);
@@ -48,27 +49,24 @@ public partial class EditPropertyForRent : System.Web.UI.Page
 
                     using (SQLiteDataReader reader = sqlcomm.ExecuteReader())
                     {
-                        if (reader.HasRows)
+                        if (reader.HasRows && reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                propertyNo.Text = reader.GetString(0);
-                                txtStreet.Text = reader.GetString(1);
-                                txtCity.Text = reader.GetString(2);
-                                txtPostCode.Text = reader.GetString(3);
-                                txtType.Text = reader.GetString(4);
-                                txtRooms.Text = reader.GetString(5);
-                                txtRent.Text = reader.GetDecimal(6).ToString();
-                                string ownerNo = reader.GetString(7);
-                                ownerDropdown(ownerNo);
-                                string staffNo = reader.GetString(8);
-                                staffDropdown(staffNo);
-                                string branchNo = reader.GetString(9);
-                                branchDropdown(branchNo);
+                            propertyNo.Text  = reader["propertyNo"].ToString();
+                            txtStreet.Text   = reader["street"].ToString();
+                            txtCity.Text     = reader["city"].ToString();
+                            txtPostCode.Text = reader["postcode"].ToString();
+                            txtType.Text     = reader["type"].ToString();
+                            txtRooms.Text    = reader["rooms"].ToString();
+                            txtRent.Text     = reader["rent"].ToString();
 
-                                // Show the currently uploaded image (if any)
-                                ShowCurrentImage(propertyNo.Text);
-                            }
+                            ownerDropdown(reader["ownerNo"].ToString());
+                            staffDropdown(reader["staffNo"].ToString());
+                            branchDropdown(reader["branchNo"].ToString());
+
+                            bool isHidden = reader["isHidden"] != DBNull.Value && Convert.ToInt32(reader["isHidden"]) == 1;
+                            SetHideButton(isHidden);
+
+                            ShowCurrentImage(propertyNo.Text);
                         }
                     }
                 }
@@ -77,9 +75,45 @@ public partial class EditPropertyForRent : System.Web.UI.Page
     }
 
     /// <summary>
-    /// Looks for an uploaded image in ~/Images/Properties/ matching this propertyNo.
-    /// Displays it if found, otherwise shows the "no image" placeholder.
+    /// Adds isHidden column if it doesn't already exist. Safe to call repeatedly.
     /// </summary>
+    private void EnsureIsHiddenColumn()
+    {
+        using (SQLiteConnection con = new SQLiteConnection(Mainconn))
+        {
+            con.Open();
+            // Check if column exists
+            bool exists = false;
+            using (SQLiteCommand cmd = new SQLiteCommand("PRAGMA table_info(PropertyForRent)", con))
+            using (SQLiteDataReader r = cmd.ExecuteReader())
+            {
+                while (r.Read())
+                {
+                    if (r["name"].ToString().Equals("isHidden", StringComparison.OrdinalIgnoreCase))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!exists)
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(
+                    "ALTER TABLE PropertyForRent ADD COLUMN isHidden INTEGER DEFAULT 0", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+
+    private void SetHideButton(bool isHidden)
+    {
+        btnToggleHide.Text = isHidden ? "Show to Buyers" : "Hide from Buyers";
+        btnToggleHide.Style["background-color"] = isHidden ? "#27ae60" : "#f39c12";
+    }
+
     protected void ShowCurrentImage(string propNo)
     {
         string[] extensions = { "jpg", "jpeg", "png", "gif", "webp" };
@@ -121,9 +155,7 @@ public partial class EditPropertyForRent : System.Web.UI.Page
                 DDLOwnerNo.DataValueField = "ownerNo";
                 DDLOwnerNo.DataBind();
                 if (DDLOwnerNo.Items.FindByValue(ownerNum) != null)
-                {
                     DDLOwnerNo.SelectedValue = ownerNum;
-                }
             }
         }
     }
@@ -140,9 +172,7 @@ public partial class EditPropertyForRent : System.Web.UI.Page
                 DDLStaffNo.DataValueField = "staffNo";
                 DDLStaffNo.DataBind();
                 if (DDLStaffNo.Items.FindByValue(staffNum) != null)
-                {
                     DDLStaffNo.SelectedValue = staffNum;
-                }
             }
         }
     }
@@ -159,9 +189,7 @@ public partial class EditPropertyForRent : System.Web.UI.Page
                 DDLBranchNo.DataValueField = "branchNo";
                 DDLBranchNo.DataBind();
                 if (DDLBranchNo.Items.FindByValue(branchNum) != null)
-                {
                     DDLBranchNo.SelectedValue = branchNum;
-                }
             }
         }
     }
@@ -175,7 +203,6 @@ public partial class EditPropertyForRent : System.Web.UI.Page
     {
         var propertyID = Request.QueryString["propertyNo"];
 
-        // Handle image upload first
         if (fileUploadInput.HasFile)
         {
             string ext = Path.GetExtension(fileUploadInput.FileName).ToLower();
@@ -183,7 +210,7 @@ public partial class EditPropertyForRent : System.Web.UI.Page
 
             if (!allowed.Contains(ext))
             {
-                lblUploadMessage.Text = "❌ Invalid file type. Please upload JPG, PNG, GIF or WEBP.";
+                lblUploadMessage.Text = "Invalid file type. Please upload JPG, PNG, GIF or WEBP.";
                 lblUploadMessage.ForeColor = System.Drawing.Color.Red;
                 ShowCurrentImage(propertyID);
                 return;
@@ -191,47 +218,100 @@ public partial class EditPropertyForRent : System.Web.UI.Page
 
             if (fileUploadInput.PostedFile.ContentLength > 5 * 1024 * 1024)
             {
-                lblUploadMessage.Text = "❌ File too large. Maximum size is 5 MB.";
+                lblUploadMessage.Text = "File too large. Maximum size is 5 MB.";
                 lblUploadMessage.ForeColor = System.Drawing.Color.Red;
                 ShowCurrentImage(propertyID);
                 return;
             }
 
-            // Delete any previous image for this property (all extensions)
             string folder = Server.MapPath("~/Images/Properties/");
             foreach (var oldExt in new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" })
             {
-                string old = Path.Combine(folder, propertyID + oldExt);
-                if (File.Exists(old)) File.Delete(old);
+                string oldPath = Path.Combine(folder, propertyID + oldExt);
+                if (File.Exists(oldPath)) File.Delete(oldPath);
             }
-
-            // Save new image
-            string savePath = Path.Combine(folder, propertyID + ext);
-            fileUploadInput.SaveAs(savePath);
+            fileUploadInput.SaveAs(Path.Combine(folder, propertyID + ext));
         }
 
-        // Update property details in DB
         using (SQLiteConnection con = new SQLiteConnection(Mainconn))
         {
             con.Open();
             string sqlquery = "UPDATE PropertyForRent SET street=@street, city=@city, postcode=@postcode, type=@type, rooms=@rooms, rent=@rent, ownerNo=@ownerNo, staffNo=@staffNo, branchNo=@branchNo WHERE propertyNo=@propertyNo";
             using (SQLiteCommand cmd = new SQLiteCommand(sqlquery, con))
             {
-                cmd.Parameters.AddWithValue("@street", txtStreet.Text);
-                cmd.Parameters.AddWithValue("@city", txtCity.Text);
-                cmd.Parameters.AddWithValue("@postcode", txtPostCode.Text);
-                cmd.Parameters.AddWithValue("@type", txtType.Text);
-                cmd.Parameters.AddWithValue("@rooms", txtRooms.Text);
-                cmd.Parameters.AddWithValue("@rent", txtRent.Text);
-                cmd.Parameters.AddWithValue("@ownerNo", DDLOwnerNo.Text);
-                cmd.Parameters.AddWithValue("@staffNo", DDLStaffNo.Text);
-                cmd.Parameters.AddWithValue("@branchNo", DDLBranchNo.Text);
+                cmd.Parameters.AddWithValue("@street",     txtStreet.Text);
+                cmd.Parameters.AddWithValue("@city",       txtCity.Text);
+                cmd.Parameters.AddWithValue("@postcode",   txtPostCode.Text);
+                cmd.Parameters.AddWithValue("@type",       txtType.Text);
+                cmd.Parameters.AddWithValue("@rooms",      txtRooms.Text);
+                cmd.Parameters.AddWithValue("@rent",       txtRent.Text);
+                cmd.Parameters.AddWithValue("@ownerNo",    DDLOwnerNo.Text);
+                cmd.Parameters.AddWithValue("@staffNo",    DDLStaffNo.Text);
+                cmd.Parameters.AddWithValue("@branchNo",   DDLBranchNo.Text);
                 cmd.Parameters.AddWithValue("@propertyNo", propertyID);
-
                 cmd.ExecuteNonQuery();
             }
         }
 
         Response.Redirect("PropertyForRent.aspx");
+    }
+
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {
+        var propertyID = Request.QueryString["propertyNo"];
+        if (string.IsNullOrEmpty(propertyID)) return;
+
+        string folder = Server.MapPath("~/Images/Properties/");
+        foreach (var ext in new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" })
+        {
+            string imgPath = Path.Combine(folder, propertyID + ext);
+            if (File.Exists(imgPath)) File.Delete(imgPath);
+        }
+
+        using (SQLiteConnection con = new SQLiteConnection(Mainconn))
+        {
+            con.Open();
+            using (SQLiteCommand cmd = new SQLiteCommand("DELETE FROM PropertyForRent WHERE propertyNo=@propertyNo", con))
+            {
+                cmd.Parameters.AddWithValue("@propertyNo", propertyID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        Response.Redirect("PropertyForRent.aspx");
+    }
+
+    protected void btnToggleHide_Click(object sender, EventArgs e)
+    {
+        var propertyID = Request.QueryString["propertyNo"];
+        if (string.IsNullOrEmpty(propertyID)) return;
+
+        EnsureIsHiddenColumn();
+
+        using (SQLiteConnection con = new SQLiteConnection(Mainconn))
+        {
+            con.Open();
+
+            int currentHidden = 0;
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "SELECT isHidden FROM PropertyForRent WHERE propertyNo=@propertyNo", con))
+            {
+                cmd.Parameters.AddWithValue("@propertyNo", propertyID);
+                var result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                    currentHidden = Convert.ToInt32(result);
+            }
+
+            int newHidden = currentHidden == 1 ? 0 : 1;
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "UPDATE PropertyForRent SET isHidden=@isHidden WHERE propertyNo=@propertyNo", con))
+            {
+                cmd.Parameters.AddWithValue("@isHidden",   newHidden);
+                cmd.Parameters.AddWithValue("@propertyNo", propertyID);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        Response.Redirect(Request.Url.PathAndQuery);
     }
 }

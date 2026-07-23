@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="PropertyForRent.aspx.cs" Inherits="PropertyForRent" MasterPageFile="~/Site.Master" %>
+<%@ Page Title="Properties" Language="C#" AutoEventWireup="true" CodeFile="PropertyForRent.aspx.cs" Inherits="PropertyForRent" MasterPageFile="~/Site.Master" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container" style="margin-top: 30px;">
