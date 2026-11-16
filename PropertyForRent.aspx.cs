@@ -39,12 +39,19 @@ public partial class PropertyForRent : System.Web.UI.Page
     private void LoadProperties(string keyword, string priceRange, string rooms, string propertyType)
     {
         string mainconn = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+        HelperUtilities.EnsureIsHiddenColumn(mainconn);
+
         using (var con = new SQLiteConnection(mainconn))
         {
             string sqlquery = @"SELECT * FROM PropertyForRent
                 WHERE (@q = '' OR city LIKE @likeQ OR street LIKE @likeQ OR postcode LIKE @likeQ OR type LIKE @likeQ OR propertyNo LIKE @likeQ)
                 AND (@rooms = '' OR rooms = @rooms)
                 AND (@type = '' OR type = @type)";
+
+            if (!IsSeller())
+            {
+                sqlquery += " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases)";
+            }
 
             decimal minPrice;
             decimal maxPrice;

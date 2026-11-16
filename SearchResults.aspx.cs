@@ -7,7 +7,6 @@ using System.Configuration;
 using PropertyForRentEdit;
 using System.Web.UI.WebControls;
 
-
 public partial class SearchResults : Page
 {
     public string SearchKeyword { get; private set; } = "";
@@ -33,16 +32,20 @@ public partial class SearchResults : Page
     private int LoadProperties(string keyword)
     {
         string mainconn = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
+        HelperUtilities.EnsureIsHiddenColumn(mainconn);
+        bool isSeller = User.Identity.IsAuthenticated && User.IsInRole("Seller");
+        string buyerFilter = !isSeller ? " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases)" : "";
+
         using (var con = new SQLiteConnection(mainconn))
         {
             string sqlquery;
             if (!string.IsNullOrEmpty(keyword))
             {
-                sqlquery = "SELECT * FROM PropertyForRent WHERE city LIKE @q OR street LIKE @q2 OR postcode LIKE @q3 OR type LIKE @q4 ORDER BY type";
+                sqlquery = "SELECT * FROM PropertyForRent WHERE (city LIKE @q OR street LIKE @q2 OR postcode LIKE @q3 OR type LIKE @q4)" + buyerFilter + " ORDER BY type";
             }
             else
             {
-                sqlquery = "SELECT * FROM PropertyForRent ORDER BY type";
+                sqlquery = "SELECT * FROM PropertyForRent WHERE 1=1" + buyerFilter + " ORDER BY type";
             }
 
             using (var sqlconn = new SQLiteCommand(sqlquery, con))
@@ -93,7 +96,6 @@ public partial class SearchResults : Page
             string propertyNo = e.CommandArgument.ToString();
 
             Response.Redirect("~/Checkout.aspx?propertyNo=" + Server.UrlEncode(propertyNo));
-
         }
     }
 }

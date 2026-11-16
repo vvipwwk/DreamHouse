@@ -85,6 +85,13 @@ public partial class Checkout : Page
 
             con.Open();
             cmd.ExecuteNonQuery();
+
+            // Automatically hide the property from buyers since it has been bought
+            using (SQLiteCommand hideCmd = new SQLiteCommand("UPDATE PropertyForRent SET isHidden = 1 WHERE propertyNo = @PropertyNo", con))
+            {
+                hideCmd.Parameters.AddWithValue("@PropertyNo", PropertyNo);
+                hideCmd.ExecuteNonQuery();
+            }
         }
 
         ShowMessage("Checkout completed. Your purchase record has been saved for property " + PropertyNo + ".", true);

@@ -56,6 +56,7 @@
                                 <div style="display: flex; justify-content: space-between; align-items: baseline;">
                                     <h4 class="card-title" style="margin-top: 0; font-weight: bold; color: #333;">
                                         <%# Eval("type") %> in <%# Eval("city") %>
+                                        <%# IsSeller() && Eval("isHidden") != DBNull.Value && Convert.ToInt32(Eval("isHidden")) == 1 ? "<span class='badge' style='background:#f39c12; margin-left:8px; font-size:0.65em; vertical-align:middle;'>Hidden / Bought</span>" : "" %>
                                     </h4>
                                     <span style="font-size: 1.2em; font-weight: bold; color: #e74c3c;">
                                         $<%# Eval("rent", "{0:0.00}") %><small style="color: #7f8c8d; font-size: 0.6em;">/mo</small>

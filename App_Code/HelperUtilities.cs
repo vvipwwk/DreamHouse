@@ -53,5 +53,34 @@ namespace PropertyForRentEdit
             var ctx = System.Web.HttpContext.Current;
             return ctx != null && ctx.User != null && ctx.User.IsInRole(role);
         }
+
+        public static void EnsureIsHiddenColumn(string connectionString)
+        {
+            using (var con = new System.Data.SQLite.SQLiteConnection(connectionString))
+            {
+                con.Open();
+                bool exists = false;
+                using (var cmd = new System.Data.SQLite.SQLiteCommand("PRAGMA table_info(PropertyForRent)", con))
+                using (var r = cmd.ExecuteReader())
+                {
+                    while (r.Read())
+                    {
+                        if (r["name"].ToString().Equals("isHidden", System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!exists)
+                {
+                    using (var cmd = new System.Data.SQLite.SQLiteCommand("ALTER TABLE PropertyForRent ADD COLUMN isHidden INTEGER DEFAULT 0", con))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }

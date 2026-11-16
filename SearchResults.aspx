@@ -1,4 +1,4 @@
-﻿﻿<%@ Page Title="Search Results" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="SearchResults.aspx.cs" Inherits="SearchResults" %>
+﻿<%@ Page Title="Search Results" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="SearchResults.aspx.cs" Inherits="SearchResults" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container" style="margin-top: 30px; max-width: 960px;">
@@ -45,4 +45,3 @@
     </div>
     <style>.property-card:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,.15) !important; }</style>
 </asp:Content>
-
