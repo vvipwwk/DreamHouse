@@ -50,7 +50,7 @@ public partial class PropertyForRent : System.Web.UI.Page
 
             if (!IsSeller())
             {
-                sqlquery += " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases)";
+                sqlquery += " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases WHERE Status NOT IN ('Completed', 'Released'))";
             }
 
             decimal minPrice;

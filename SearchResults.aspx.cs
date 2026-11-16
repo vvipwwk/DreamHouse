@@ -34,7 +34,7 @@ public partial class SearchResults : Page
         string mainconn = ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString;
         HelperUtilities.EnsureIsHiddenColumn(mainconn);
         bool isSeller = User.Identity.IsAuthenticated && User.IsInRole("Seller");
-        string buyerFilter = !isSeller ? " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases)" : "";
+        string buyerFilter = !isSeller ? " AND (isHidden IS NULL OR isHidden = 0) AND propertyNo NOT IN (SELECT PropertyNo FROM Purchases WHERE Status NOT IN ('Completed', 'Released'))" : "";
 
         using (var con = new SQLiteConnection(mainconn))
         {

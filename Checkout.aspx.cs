@@ -81,12 +81,12 @@ public partial class Checkout : Page
             cmd.Parameters.AddWithValue("@TaxAmount", taxAmount);
             cmd.Parameters.AddWithValue("@TotalAmount", totalAmount);
             cmd.Parameters.AddWithValue("@PaymentMethod", ddlPaymentMethod.SelectedValue);
-            cmd.Parameters.AddWithValue("@Status", "Checked Out");
+            cmd.Parameters.AddWithValue("@Status", "Active");
 
             con.Open();
             cmd.ExecuteNonQuery();
 
-            // Automatically hide the property from buyers since it has been bought
+            // Automatically hide the property from buyers since it has been rented
             using (SQLiteCommand hideCmd = new SQLiteCommand("UPDATE PropertyForRent SET isHidden = 1 WHERE propertyNo = @PropertyNo", con))
             {
                 hideCmd.Parameters.AddWithValue("@PropertyNo", PropertyNo);
@@ -94,7 +94,7 @@ public partial class Checkout : Page
             }
         }
 
-        ShowMessage("Checkout completed. Your purchase record has been saved for property " + PropertyNo + ".", true);
+        ShowMessage("Booking completed! You have successfully rented property " + PropertyNo + ". You can view your booking and check out anytime in <a href='MyBookings.aspx' style='font-weight:bold; color:#155724; text-decoration:underline;'>My Bookings</a>.", true);
         btnConfirmCheckout.Enabled = false;
     }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -305,6 +305,15 @@ public partial class EditPropertyForRent : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@propertyNo", propertyID);
                 cmd.ExecuteNonQuery();
             }
+
+            if (newHidden == 0)
+            {
+                using (SQLiteCommand releaseCmd = new SQLiteCommand("UPDATE Purchases SET Status='Completed' WHERE PropertyNo=@propertyNo AND Status NOT IN ('Completed', 'Released')", con))
+                {
+                    releaseCmd.Parameters.AddWithValue("@propertyNo", propertyID);
+                    releaseCmd.ExecuteNonQuery();
+                }
+            }
         }
 
         Response.Redirect("PropertyForRent.aspx");
@@ -338,6 +347,15 @@ public partial class EditPropertyForRent : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@isHidden",   newHidden);
                 cmd.Parameters.AddWithValue("@propertyNo", propertyID);
                 cmd.ExecuteNonQuery();
+            }
+
+            if (newHidden == 0)
+            {
+                using (SQLiteCommand releaseCmd = new SQLiteCommand("UPDATE Purchases SET Status='Completed' WHERE PropertyNo=@propertyNo AND Status NOT IN ('Completed', 'Released')", con))
+                {
+                    releaseCmd.Parameters.AddWithValue("@propertyNo", propertyID);
+                    releaseCmd.ExecuteNonQuery();
+                }
             }
         }
 

@@ -209,6 +209,9 @@
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/PropertyForRent">Properties</a></li>
+                        <% if (Context.User.Identity.IsAuthenticated && Context.User.IsInRole("Buyer")) { %>
+                        <li><a runat="server" href="~/MyBookings.aspx"><i class="glyphicon glyphicon-bookmark"></i> My Bookings</a></li>
+                        <% } %>
                         <li><a runat="server" href="~/About">About</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>
