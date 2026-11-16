@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 using System.Web.UI;
 using Microsoft.AspNet.Identity;
 
@@ -59,6 +60,55 @@ public partial class Checkout : Page
             return;
         }
 
+        // 1. Full name validation: max 35 characters
+        string buyerName = txtBuyerName.Text.Trim();
+        if (string.IsNullOrEmpty(buyerName))
+        {
+            ShowMessage("Full Name is required.", false);
+            return;
+        }
+        if (buyerName.Length > 35)
+        {
+            ShowMessage("Full Name cannot exceed 35 characters (currently " + buyerName.Length + ").", false);
+            return;
+        }
+
+        // 2. Contact number validation: digits only, max 9 numeric characters
+        string rawContact = txtContactNo.Text.Trim();
+        if (string.IsNullOrEmpty(rawContact))
+        {
+            ShowMessage("Contact Number is required.", false);
+            return;
+        }
+        if (!Regex.IsMatch(rawContact, @"^[0-9]{1,9}$"))
+        {
+            ShowMessage("Contact Number must contain digits only, with a maximum of 9 numeric characters (no symbols or alphabets).", false);
+            return;
+        }
+        string fullContact = ddlCountryCode.SelectedValue + " " + rawContact;
+
+        // 3. Billing Address validation: 35 to 50 characters per address line
+        string line1 = txtAddressLine1.Text.Trim();
+        if (string.IsNullOrEmpty(line1))
+        {
+            ShowMessage("Billing Address Line 1 is required.", false);
+            return;
+        }
+        if (line1.Length < 35 || line1.Length > 50)
+        {
+            ShowMessage("Billing Address Line 1 must be between 35 and 50 characters (currently " + line1.Length + ").", false);
+            return;
+        }
+
+        string line2 = txtAddressLine2.Text.Trim();
+        if (!string.IsNullOrEmpty(line2) && (line2.Length < 35 || line2.Length > 50))
+        {
+            ShowMessage("Billing Address Line 2 must be between 35 and 50 characters (currently " + line2.Length + ").", false);
+            return;
+        }
+
+        string fullBillingAddress = line1 + (!string.IsNullOrEmpty(line2) ? "\n" + line2 : "");
+
         decimal serviceFee = CalculateServiceFee(MonthlyRent);
         decimal taxAmount = CalculateTax(MonthlyRent, serviceFee);
         decimal totalAmount = MonthlyRent + serviceFee + taxAmount;
@@ -72,10 +122,10 @@ public partial class Checkout : Page
             cmd.Parameters.AddWithValue("@PropertyNo", PropertyNo);
             cmd.Parameters.AddWithValue("@UserId", User.Identity.GetUserId());
             cmd.Parameters.AddWithValue("@PurchaseDate", DateTime.Now);
-            cmd.Parameters.AddWithValue("@BuyerName", txtBuyerName.Text.Trim());
+            cmd.Parameters.AddWithValue("@BuyerName", buyerName);
             cmd.Parameters.AddWithValue("@BuyerEmail", txtBuyerEmail.Text.Trim());
-            cmd.Parameters.AddWithValue("@ContactNo", txtContactNo.Text.Trim());
-            cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
+            cmd.Parameters.AddWithValue("@ContactNo", fullContact);
+            cmd.Parameters.AddWithValue("@BillingAddress", fullBillingAddress);
             cmd.Parameters.AddWithValue("@MonthlyRent", MonthlyRent);
             cmd.Parameters.AddWithValue("@ServiceFee", serviceFee);
             cmd.Parameters.AddWithValue("@TaxAmount", taxAmount);

@@ -15,19 +15,21 @@
             <asp:Label ID="lblRecordCount" runat="server" style="color:#7f8c8d; font-weight:600;"></asp:Label>
         </div>
 
-        <asp:GridView ID="gvPurchaseRecords" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered records-table" GridLines="None" EmptyDataText="No purchase records found for this property.">
-            <Columns>
-                <asp:BoundField DataField="PropertyNo" HeaderText="Property" />
-                <asp:BoundField DataField="PropertyType" HeaderText="Type" />
-                <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
-                <asp:BoundField DataField="BuyerEmail" HeaderText="Email" />
-                <asp:BoundField DataField="ContactNo" HeaderText="Contact" />
-                <asp:BoundField DataField="PurchaseDate" HeaderText="Checkout Date" DataFormatString="{0:dd MMM yyyy HH:mm}" />
-                <asp:BoundField DataField="TotalAmount" HeaderText="Total" DataFormatString="{0:$0.00}" />
-                <asp:BoundField DataField="PaymentMethod" HeaderText="Payment" />
-                <asp:BoundField DataField="Status" HeaderText="Status" />
-            </Columns>
-        </asp:GridView>
+        <div style="overflow-x:auto;">
+            <asp:GridView ID="gvPurchaseRecords" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered records-table" GridLines="None" EmptyDataText="No purchase records found for this property.">
+                <Columns>
+                    <asp:BoundField DataField="PropertyNo" HeaderText="Property" />
+                    <asp:BoundField DataField="PropertyType" HeaderText="Type" />
+                    <asp:BoundField DataField="BuyerName" HeaderText="Buyer" />
+                    <asp:BoundField DataField="BuyerEmail" HeaderText="Email" />
+                    <asp:BoundField DataField="ContactNo" HeaderText="Contact" />
+                    <asp:BoundField DataField="PurchaseDate" HeaderText="Checkout Date" DataFormatString="{0:dd MMM yyyy HH:mm}" />
+                    <asp:BoundField DataField="TotalAmount" HeaderText="Total" DataFormatString="{0:$0.00}" />
+                    <asp:BoundField DataField="PaymentMethod" HeaderText="Payment" />
+                    <asp:BoundField DataField="Status" HeaderText="Status" />
+                </Columns>
+            </asp:GridView>
+        </div>
     </div>
 
     <style>
@@ -45,10 +47,19 @@
         .records-filter .form-control {
             max-width:340px;
         }
+        .records-table {
+            background:#fff;
+        }
         .records-table th {
             background:#2C3E50;
             color:#fff;
             border-color:#2C3E50 !important;
+            white-space:nowrap;
+        }
+        .records-table td {
+            word-break:break-word;
+            max-width:220px;
+            vertical-align:middle !important;
         }
     </style>
 </asp:Content>
