@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -219,7 +219,18 @@ public partial class EditPropertyForRent : System.Web.UI.Page
 
     protected void btnUpdate_Click(object sender, EventArgs e)
     {
+        if (!Page.IsValid) return;
+
         var propertyID = Request.QueryString["propertyNo"];
+
+        decimal rentValue;
+        if (!decimal.TryParse(txtRent.Text.Trim(), out rentValue))
+        {
+            lblUploadMessage.Text = "Rent must be a valid number.";
+            lblUploadMessage.ForeColor = System.Drawing.Color.Red;
+            ShowCurrentImage(propertyID);
+            return;
+        }
 
 
 
@@ -266,12 +277,12 @@ public partial class EditPropertyForRent : System.Web.UI.Page
             using (SQLiteCommand cmd = new SQLiteCommand(sqlquery, con))
             {
 
-                cmd.Parameters.AddWithValue("@street",     txtStreet.Text);
-                cmd.Parameters.AddWithValue("@city",       txtCity.Text);
-                cmd.Parameters.AddWithValue("@postcode",   txtPostCode.Text);
-                cmd.Parameters.AddWithValue("@type",       txtType.Text);
-                cmd.Parameters.AddWithValue("@rooms",      txtRooms.Text);
-                cmd.Parameters.AddWithValue("@rent",       txtRent.Text);
+                cmd.Parameters.AddWithValue("@street",     txtStreet.Text.Trim());
+                cmd.Parameters.AddWithValue("@city",       txtCity.Text.Trim());
+                cmd.Parameters.AddWithValue("@postcode",   txtPostCode.Text.Trim());
+                cmd.Parameters.AddWithValue("@type",       txtType.Text.Trim());
+                cmd.Parameters.AddWithValue("@rooms",      txtRooms.Text.Trim());
+                cmd.Parameters.AddWithValue("@rent",       rentValue);
                 cmd.Parameters.AddWithValue("@ownerNo",    DDLOwnerNo.Text);
                 cmd.Parameters.AddWithValue("@staffNo",    DDLStaffNo.Text);
                 cmd.Parameters.AddWithValue("@branchNo",   DDLBranchNo.Text);
@@ -304,15 +315,6 @@ public partial class EditPropertyForRent : System.Web.UI.Page
             {
                 cmd.Parameters.AddWithValue("@propertyNo", propertyID);
                 cmd.ExecuteNonQuery();
-            }
-
-            if (newHidden == 0)
-            {
-                using (SQLiteCommand releaseCmd = new SQLiteCommand("UPDATE Purchases SET Status='Completed' WHERE PropertyNo=@propertyNo AND Status NOT IN ('Completed', 'Released')", con))
-                {
-                    releaseCmd.Parameters.AddWithValue("@propertyNo", propertyID);
-                    releaseCmd.ExecuteNonQuery();
-                }
             }
         }
 

@@ -146,40 +146,52 @@
                         <asp:TextBox ID="propertyNo" runat="server" CssClass="form-control" ReadOnly="true" />
                     </div>
                     <div class="form-col">
-                        <label>Type</label>
-                        <asp:TextBox ID="txtType" runat="server" CssClass="form-control" />
+                        <label>Type <span style="text-transform:none; font-weight:normal;">(Max 20 characters)</span></label>
+                        <asp:TextBox ID="txtType" runat="server" MaxLength="20" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtType" ErrorMessage="Type is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtType" ValidationExpression="^[A-Za-z][A-Za-z \-]{0,19}$" ErrorMessage="Type must be 1-20 letters only (e.g. House, Flat, Apartment)." CssClass="text-danger" Display="Dynamic" />
                     </div>
                 </div>
 
                 <%-- Row 2: Street (full width) --%>
                 <div class="form-row">
                     <div class="form-col full">
-                        <label>Street</label>
-                        <asp:TextBox ID="txtStreet" runat="server" CssClass="form-control" />
+                        <label>Street <span style="text-transform:none; font-weight:normal;">(Max 60 characters)</span></label>
+                        <asp:TextBox ID="txtStreet" runat="server" MaxLength="60" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtStreet" ErrorMessage="Street is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtStreet" ValidationExpression="^.{1,60}$" ErrorMessage="Street cannot exceed 60 characters." CssClass="text-danger" Display="Dynamic" />
                     </div>
                 </div>
 
                 <%-- Row 3: City + Post Code --%>
                 <div class="form-row">
                     <div class="form-col">
-                        <label>City</label>
-                        <asp:TextBox ID="txtCity" runat="server" CssClass="form-control" />
+                        <label>City <span style="text-transform:none; font-weight:normal;">(Max 30 characters)</span></label>
+                        <asp:TextBox ID="txtCity" runat="server" MaxLength="30" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtCity" ErrorMessage="City is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtCity" ValidationExpression="^[A-Za-z][A-Za-z .'\-]{0,29}$" ErrorMessage="City must be 1-30 letters only." CssClass="text-danger" Display="Dynamic" />
                     </div>
                     <div class="form-col">
-                        <label>Post Code</label>
-                        <asp:TextBox ID="txtPostCode" runat="server" CssClass="form-control" />
+                        <label>Post Code <span style="text-transform:none; font-weight:normal;">(Max 10 characters)</span></label>
+                        <asp:TextBox ID="txtPostCode" runat="server" MaxLength="10" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPostCode" ErrorMessage="Post Code is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPostCode" ValidationExpression="^[A-Za-z0-9][A-Za-z0-9 \-]{0,9}$" ErrorMessage="Post Code must be 1-10 letters, digits, space or hyphen." CssClass="text-danger" Display="Dynamic" />
                     </div>
                 </div>
 
                 <%-- Row 4: Rooms + Rent --%>
                 <div class="form-row">
                     <div class="form-col">
-                        <label>Rooms</label>
-                        <asp:TextBox ID="txtRooms" runat="server" CssClass="form-control" />
+                        <label>Rooms <span style="text-transform:none; font-weight:normal;">(Max 2 characters)</span></label>
+                        <asp:TextBox ID="txtRooms" runat="server" MaxLength="2" CssClass="form-control" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtRooms" ErrorMessage="Rooms is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtRooms" ValidationExpression="^[1-9][0-9]?$" ErrorMessage="Rooms must be a whole number from 1 to 99." CssClass="text-danger" Display="Dynamic" />
                     </div>
                     <div class="form-col">
-                        <label>Rent ($)</label>
-                        <asp:TextBox ID="txtRent" runat="server" CssClass="form-control rent-field" />
+                        <label>Rent ($) <span style="text-transform:none; font-weight:normal;">(Max 9 characters)</span></label>
+                        <asp:TextBox ID="txtRent" runat="server" MaxLength="9" CssClass="form-control rent-field" />
+                        <asp:RequiredFieldValidator runat="server" ControlToValidate="txtRent" ErrorMessage="Rent is required." CssClass="text-danger" Display="Dynamic" />
+                        <asp:RegularExpressionValidator runat="server" ControlToValidate="txtRent" ValidationExpression="^[0-9]{1,6}(\.[0-9]{1,2})?$" ErrorMessage="Rent must be a number up to 6 digits with at most 2 decimals (e.g. 650 or 650.50)." CssClass="text-danger" Display="Dynamic" />
                     </div>
                 </div>
 
@@ -236,10 +248,10 @@
                 <%-- Action Buttons --%>
                 <div class="action-row">
                     <div class="action-left">
-                        <asp:Button ID="btnDelete" runat="server" OnClick="btnDelete_Click"
+                        <asp:Button ID="btnDelete" runat="server" CausesValidation="false" OnClick="btnDelete_Click"
                             Text="Delete Property" CssClass="btn-action btn-delete"
                             OnClientClick="return confirm('Permanently delete this property? This cannot be undone.');" />
-                        <asp:Button ID="btnToggleHide" runat="server" OnClick="btnToggleHide_Click"
+                        <asp:Button ID="btnToggleHide" runat="server" CausesValidation="false" OnClick="btnToggleHide_Click"
                             Text="Hide from Buyers" CssClass="btn-action btn-hide" />
                     </div>
                     <asp:Button ID="btnUpdate" runat="server" OnClick="btnUpdate_Click"
@@ -292,5 +304,41 @@
             previewImage(input);
         }
 
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function addCounter(el) {
+                if (!el) return;
+                var max = el.maxLength;
+                var s = document.createElement("small");
+                s.style.cssText = "display:block; text-align:right; color:#7f8c8d; margin-top:3px;";
+                el.parentNode.insertBefore(s, el.nextSibling);
+                function update() {
+                    var len = el.value.length;
+                    s.textContent = len + " / " + max + " characters";
+                    s.style.color = len >= max ? "#e74c3c" : "#7f8c8d";
+                }
+                el.addEventListener("input", update);
+                update();
+            }
+            addCounter(document.getElementById('<%= txtType.ClientID %>'));
+            addCounter(document.getElementById('<%= txtStreet.ClientID %>'));
+            addCounter(document.getElementById('<%= txtCity.ClientID %>'));
+            addCounter(document.getElementById('<%= txtPostCode.ClientID %>'));
+            addCounter(document.getElementById('<%= txtRooms.ClientID %>'));
+            addCounter(document.getElementById('<%= txtRent.ClientID %>'));
+
+            // Rooms: digits only
+            var rooms = document.getElementById('<%= txtRooms.ClientID %>');
+            if (rooms) rooms.addEventListener('input', function () { this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2); });
+            // Rent: digits and one decimal point, max 2 decimals
+            var rent = document.getElementById('<%= txtRent.ClientID %>');
+            if (rent) rent.addEventListener('input', function () {
+                var v = this.value.replace(/[^0-9.]/g, '');
+                var p = v.split('.');
+                if (p.length > 1) v = p[0] + '.' + p.slice(1).join('').slice(0, 2);
+                this.value = v.slice(0, 9);
+            });
+        });
     </script>
 </asp:Content>
