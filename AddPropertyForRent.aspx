@@ -52,7 +52,7 @@
                     <label style="color: #7f8c8d; font-weight: 600;">Post Code <small style="color:#7f8c8d; font-weight:normal; text-transform:none;">(Max 10 characters)</small></label>
                     <asp:TextBox ID="txtPostCode" runat="server" CssClass="form-control" MaxLength="10" style="border-radius: 8px;"></asp:TextBox>
                     <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPostCode" ErrorMessage="Post Code is required." CssClass="text-danger" Display="Dynamic" />
-                    <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPostCode" ValidationExpression="^[A-Za-z0-9][A-Za-z0-9 \-]{0,9}$" ErrorMessage="Post Code must be 1-10 letters, digits, space or hyphen." CssClass="text-danger" Display="Dynamic" />
+                    <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPostCode" ValidationExpression="^[0-9]{1,10}$" ErrorMessage="Post Code must contain digits only (maximum 10 digits)." CssClass="text-danger" Display="Dynamic" />
                 </div>
             </div>
 
@@ -210,17 +210,29 @@
             addCounter(document.getElementById('<%= txtRooms.ClientID %>'));
             addCounter(document.getElementById('<%= txtRent.ClientID %>'));
 
-            // Rooms: digits only
-            var rooms = document.getElementById('<%= txtRooms.ClientID %>');
-            if (rooms) rooms.addEventListener('input', function () { this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2); });
-            // Rent: digits and one decimal point, max 2 decimals
-            var rent = document.getElementById('<%= txtRent.ClientID %>');
-            if (rent) rent.addEventListener('input', function () {
-                var v = this.value.replace(/[^0-9.]/g, '');
+            // Numeric-only restrictions (typing, pasting and dropping text are all filtered)
+            function restrict(id, clean, allowedKey) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.setAttribute('inputmode', 'decimal');
+                el.addEventListener('keypress', function (e) {
+                    if (e.ctrlKey || e.metaKey || e.key.length > 1) return;
+                    if (!allowedKey.test(e.key)) e.preventDefault();
+                });
+                el.addEventListener('input', function () {
+                    var v = clean(this.value);
+                    if (v !== this.value) this.value = v;
+                });
+            }
+            restrict('<%= txtPostCode.ClientID %>', function (v) { return v.replace(/[^0-9]/g, '').slice(0, 10); }, /[0-9]/);
+            restrict('<%= txtRooms.ClientID %>', function (v) { return v.replace(/[^0-9]/g, '').slice(0, 2); }, /[0-9]/);
+            restrict('<%= txtRent.ClientID %>', function (v) {
+                v = v.replace(/[^0-9.]/g, '');
                 var p = v.split('.');
-                if (p.length > 1) v = p[0] + '.' + p.slice(1).join('').slice(0, 2);
-                this.value = v.slice(0, 9);
-            });
+                if (p.length > 1) v = p[0].slice(0, 6) + '.' + p.slice(1).join('').slice(0, 2);
+                else v = v.slice(0, 6);
+                return v;
+            }, /[0-9.]/);
         });
     </script>
 </asp:Content>
